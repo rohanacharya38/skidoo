@@ -2,7 +2,7 @@ if(!(Test-Path("..\bin")))
 {
         New-Item -Itemtype Directory "..\bin"
 }
-$source_name = "..\code\main.c"
+$source_name = "..\code\main.cpp","..\code\SDL_c.cpp"
 $executable_name = "main.exe"
 $lib_path ="..\lib\"
 $include_path ="..\include"
