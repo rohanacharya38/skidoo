@@ -1,6 +1,10 @@
-#include <SDL.h>
-#include "headers\SDL_c.h"
-#include "headers\defines.h"
+#ifdef __linux__ 
+    #include <SDL2/SDL.h>
+#elif _WIN32
+    #include <SDL.h>
+#endif
+#include "headers/SDL_c.h"
+#include "headers/defines.h"
 #define STB_IMAGE_IMPLEMENTATION
 #include "headers/stb_image.h"
 window::window(const char *title, int w, int h)

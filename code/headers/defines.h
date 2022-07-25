@@ -1,6 +1,11 @@
 #pragma once
 #include <iostream>
-#include <SDL.h>
+#ifdef __linux__ 
+    #include <SDL2/SDL.h>
+    void __debugbreak();
+#elif _WIN32
+    #include <SDL.h>
+#endif
 
 #define ASSERT_SDL(x) if (!(x)) { std::cout << "Assertion failed: " << #x << "ERROR: "<<SDL_GetError()\
                             <<"\nIn File: "<<__FILE__<<"In Line Number: "<<__LINE__<<std::endl;\
