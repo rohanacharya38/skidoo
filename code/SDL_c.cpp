@@ -40,7 +40,7 @@ char * font::load_file(renderer &r, const char *path)
     mfont = stb::load_img(path, r);
     if (mfont == nullptr)
     {
-        stbi_failure_reason();
+
     }
     else
     {
@@ -58,9 +58,7 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
     uint8_t* data = stbi_load(image_path, &width, &height, &orig_format, req_format);
     if (!data)
     {
-        std::cout << stbi_failure_reason();
         return nullptr;
-    
     }
     Uint32 rmask, gmask, bmask, amask;
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -83,6 +81,9 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
                                                  rmask, gmask, bmask, amask);
 
     SDL_Texture *ret = SDL_CreateTextureFromSurface(renderer, surf);
+    if (ret == nullptr)
+        return nullptr;
+    else
     return ret;
 }
     void renderer::clear()
@@ -103,5 +104,12 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
     }
     font::~font()
     {
-		SDL_DestroyTexture(mfont);
+        SDL_DestroyTexture(mfont);
+    }
+    void renderer::loadTexture(Texture& t, SDL_Rect* srcRect, SDL_Rect* destRect)
+    {
+        if (SDL_RenderCopy(mrenderer, t, srcRect, destRect) != 0)
+        {
+            printf("Error: %s\n", SDL_GetError());
+        }
     }

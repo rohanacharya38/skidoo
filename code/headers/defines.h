@@ -17,36 +17,5 @@
                             __debugbreak();\
                                }
 
-
-class string {
-private:
-    char* data;
-public:
-    int length;
-    string(const char* data,int length)
-    {
-        this->data = new char[length];
-        if (this->data != nullptr)
-        {
-
-            for (int i = 0; i < length; i++)
-            {
-                this->data[i] = data[i];
-            }
-            
-        }
-        this->length = length;
-
-    }
-    
-    char operator [](int i)
-    {
-        return data[i];
-    }
-    operator char*()
-    {
-        return data;
-    }
-    
-
-};
+constexpr const int SCREEN_WIDTH = 640;
+constexpr const int SCREEN_HEIGHT = 480;
