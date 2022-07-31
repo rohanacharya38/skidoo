@@ -1,9 +1,10 @@
 #include "headers/game.hpp"
 #include "headers/threading.h"
-renderer * main_renderer;
+#include <thread>
+renderer* main_renderer;
 struct gameAssets {
-    Sprite* sprites;
-	Sprite man_spritesheet;
+    Sprite obstacles[15];       //array of sprites for obstacles
+	Sprite man;
 };
 SDL_Rect man_sprite_position[28];
 
@@ -20,14 +21,24 @@ auto load_man_pngs(void *arg)
         man_sprite_position[i].x = man_sprite_position[i-1].x+ man_sprite_position[i].w;
         man_sprite_position[i].y = 0;
     }
+	
     gameAssets* p = reinterpret_cast<gameAssets*>(arg);
-    Sprite *sprites=p->sprites;
-    (p->man_spritesheet).load(*main_renderer, "./misc/man.png");
-    //for (int i = 1; i < 28; i++)
-    //{
-    //    //(*man)[i].load(*main_renderer, "./misc/man.png", {0,0,32,32}, {50,50,32,32});
-    //    man[i].load(*main_renderer, "./misc/man.png", { 0,0,32,32 }, { 50,50,32,32 });
-    //}
+	
+    Sprite* man_sprite = & (p->man);
+    man_sprite->load(*main_renderer, "./misc/man.png");
+    if (!(p->man))
+    {
+        __debugbreak();
+    }
+    Sprite* obs = p->obstacles;
+	/*Now load all the obstacles in sprites array*/
+    char data[100];
+    for (int i = 0; i <15 ; i++)
+    {
+        sprintf_s(data, "./misc/%d.png", i + 1);
+		obs[i].load(*main_renderer, (data));
+    }
+    
     return 0;
 }
 void Game::start_game()
@@ -39,8 +50,8 @@ void Game::start_game()
     {
         std::string error = SDL_GetError();
         return;
-
     }
+
 	//in the next block
 
 	/*...........................*/
@@ -49,7 +60,7 @@ void Game::start_game()
 	/*our program can do other stuffs like rendering menu while the loading of sprites are complete, in this way we can save valuable time */
     /*...........................*/
 	
-    gameAssets cur_game = { sprites,man_spritesheet};
+    gameAssets cur_game;
     thrd_t man_loading_thrd;
     thrd_create(&man_loading_thrd, load_man_pngs, reinterpret_cast<void*>(&cur_game));
 	/*.............................*/
@@ -62,7 +73,7 @@ void Game::start_game()
         mrenderer.set_color(0, 0, 0, 255);
 		mrenderer.clear();
         bgTexture.render();
-        mfont.render_string(mrenderer, "START", SCREEN_WIDTH / 2, SCREEN_WIDTH / 2);
+        mfont.render_string(mrenderer, "START", SCREEN_WIDTH / 2, SCREEN_HEIGHT/ 2);
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -75,7 +86,7 @@ void Game::start_game()
                 {
                     if (event.button.button == SDL_BUTTON_LEFT)
                     {
-                        if (event.button.x > SCREEN_WIDTH / 2 - 50 && event.button.x < SCREEN_WIDTH / 2 + 50 && event.button.y > SCREEN_HEIGHT / 2 - 50 && event.button.y < SCREEN_HEIGHT / 2 + 50);
+                        if (event.button.x > SCREEN_WIDTH / 2 - 50 && event.button.x < SCREEN_WIDTH / 2 + 50 && event.button.y > SCREEN_HEIGHT / 2 - 50 && event.button.y < SCREEN_HEIGHT / 2 + 50)
                         {
                             game_running = true;
                             menu_running = false;
@@ -92,7 +103,7 @@ void Game::start_game()
 	/*.........................*/
 	/*Joining game assets loading thread here to ensure everything is loaded properly*/
 	/*.........................*/
-    thrd_join(man_loading_thrd, nullptr);
+    thrd_join(man_loading_thrd,nullptr);
     /*.........................*/
     /*.........................*/
 	
@@ -100,7 +111,7 @@ void Game::start_game()
     {
         mrenderer.set_color(0,0,0,255);
         mrenderer.clear();
-        bgTexture.render();
+        //bgTexture.render();
  
         while (SDL_PollEvent(&event))
         {
@@ -126,13 +137,14 @@ void Game::start_game()
             }
             }
         }
-		
-        bgTexture.render();
-        /*man[i].render();*/
-        man_spritesheet.render(&(man_sprite_position[anim_frame]));
+        cur_game.man.render(&man_sprite_position[anim_frame],nullptr);
         mrenderer.render();
+        
+            SDL_Rect pos = { SCREEN_WIDTH/2,100,200,200 };
+            cur_game.obstacles[5].render(nullptr, nullptr);
         anim_frame++;
-            if (anim_frame > 27)
+		
+            if (anim_frame > 14)
                 anim_frame= 0;
     }
             if (menu_running)

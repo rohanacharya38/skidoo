@@ -58,6 +58,7 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
     uint8_t* data = stbi_load(image_path, &width, &height, &orig_format, req_format);
     if (!data)
     {
+        std::string error = stbi_failure_reason();
         return nullptr;
     }
     Uint32 rmask, gmask, bmask, amask;

@@ -8,7 +8,7 @@
 
 class window;
 class renderer;
-class texture;
+class Texture;
 class font;
 class window
 {
@@ -54,7 +54,7 @@ public:
     {
         SDL_Rect char_rect;
         SDL_Rect d_rect = { xPos, yPos,14, 18 };
-        for (int i = 0; i <str.length(); i++)
+        for (size_t i = 0; i <str.length(); i++)
         {
             if (str[i] == '\n')
             {
@@ -86,13 +86,13 @@ class Texture
 protected:
 	SDL_Texture *mtexture;
 	SDL_Renderer *mrenderer;
+
 	friend class renderer;
 	public:
-        Texture(renderer& r, const char* path)
+        Texture(renderer& r,const char* path)
         {
 			mtexture=stb::load_img(path,r);
             mrenderer = r;
-            
         }
 		Texture()
 		{
@@ -124,6 +124,7 @@ class Sprite :public Texture
 private:
 
     SDL_Renderer* mrenderer;
+
 public:
     SDL_Rect position_in_screen;
     Sprite(renderer& r, const char* path):Texture(r, path), mrenderer((SDL_Renderer*)r)
@@ -135,15 +136,14 @@ public:
     {
         position_in_screen = { 0 };
     }
-    void render(SDL_Rect *position_in_spritesheet)
+    void render(SDL_Rect *position_in_spritesheet,SDL_Rect *position_in_screen)
     {
-        SDL_RenderCopy(mrenderer, mtexture, position_in_spritesheet, &position_in_screen);
+        SDL_RenderCopy(mrenderer, mtexture, position_in_spritesheet, position_in_screen);
     }
     void load(renderer& r, const char* path)
     {
         mrenderer = r;
         mtexture = stb::load_img(path, r);
-
     }
 
     

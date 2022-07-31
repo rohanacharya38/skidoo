@@ -1,23 +1,3 @@
-Function Test-CommandExists
-
-{
-
- Param ($command)
-
- $oldPreference = $ErrorActionPreference
-
- $ErrorActionPreference = �stop�
-
- try {if(Get-Command $command){RETURN $true}}
-
- Catch { RETURN $false}
-
- Finally {$ErrorActionPreference=$oldPreference}
-
-} #end function test-CommandExists
-
-
-
 
 if(!(Test-Path("../bin")))
 {
@@ -43,9 +23,9 @@ if(!(Test-Path("SDL2.dll")))
 # cl /MD $source_name /Fe$executable_name $compiler_flags /I$include_path /link /LIBPATH:$lib_path $libraries $linker_flags /SUBSYSTEM:console
 # cl $source_name /Fe$executable_name $compiler_flag
 # clang -g  -I..\include\  -L..\lib\ -l $libraries  $source_name -o $executable_name $compiler_flags
-if(Get-Command cl){
-cl  $source_name /Fe$executable_name $compiler_flags /I$include_path /link /LIBPATH:$lib_path $libraries /SUBSYSTEM:CONSOLE
-}
+#if(Get-Command cl){
+#cl  $source_name /Fe$executable_name $compiler_flags /I$include_path /link /LIBPATH:$lib_path $libraries /SUBSYSTEM:CONSOLE
+#}
 if(Get-Command g++){
 g++ $source_name -o $executable_name_linux -lSDL2 
 }
