@@ -8,7 +8,7 @@
 
 class window;
 class renderer;
-class texture;
+class Texture;
 class font;
 class window
 {
