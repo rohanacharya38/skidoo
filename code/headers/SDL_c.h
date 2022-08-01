@@ -154,6 +154,7 @@ public:
         mrenderer = r;
         mtexture = stb::load_img(path, r,&position_in_screen);
     }
+<<<<<<< HEAD
     void setScale(float x, float y)
     {
 	    scale_x = x;
@@ -188,3 +189,8 @@ public:
 		//SDL_DestroyTexture(mtexture);
 	}
 };
+=======
+
+    
+};
+>>>>>>> cbe7a9a58950727a156f2139f354241f9e0427ec
