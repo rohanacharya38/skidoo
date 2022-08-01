@@ -14,7 +14,7 @@ private:
 	bool game_running;
     Sprite sprites[28];
     Sprite man_spritesheet;
-    Texture bgTexture;
+    Sprite bgTexture;
     SDL_Event event;
 
 public:

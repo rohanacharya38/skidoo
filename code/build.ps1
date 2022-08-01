@@ -26,6 +26,7 @@ if(!(Test-Path("SDL2.dll")))
 #if(Get-Command cl){
 #cl  $source_name /Fe$executable_name $compiler_flags /I$include_path /link /LIBPATH:$lib_path $libraries /SUBSYSTEM:CONSOLE
 #}
-if(Get-Command g++){
-g++ $source_name -o $executable_name_linux -lSDL2 
-}
+#f(Get-Command g++){
+##+ $source_name -o $executable_name_linux -lSDL2 
+#
+cl  $source_name /Fe$executable_name $compiler_flags /I$include_path /link /LIBPATH:$lib_path $libraries /SUBSYSTEM:CONSOLE

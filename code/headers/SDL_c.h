@@ -40,7 +40,10 @@ public:
         return mrenderer;
     }
     void loadTexture(Texture& t, SDL_Rect* srcRect = nullptr, SDL_Rect* destRect = nullptr);
-	
+    inline SDL_Renderer* get_renderer()
+    {
+        return mrenderer;
+    }
     ~renderer();
 };
 
@@ -79,7 +82,7 @@ public:
 };
 namespace stb
 {
-SDL_Texture *load_img(const char *image_path, SDL_Renderer *renderer);
+SDL_Texture *load_img(const char *image_path, SDL_Renderer *renderer,SDL_FRect *texture_rect);
 }
 class Texture
 {
@@ -89,9 +92,9 @@ protected:
 
 	friend class renderer;
 	public:
-        Texture(renderer& r,const char* path)
+        Texture(renderer& r,const char* path,SDL_FRect *texture_rect=nullptr)
         {
-			mtexture=stb::load_img(path,r);
+			mtexture=stb::load_img(path,r,nullptr);
             mrenderer = r;
         }
 		Texture()
@@ -108,43 +111,80 @@ protected:
         {
 			SDL_RenderCopy(mrenderer, mtexture, nullptr, nullptr);
         }
-        void load(renderer& r, const char* path)
+        void load(renderer& r, const char* path,SDL_FRect* texture_rect=nullptr)
         {
-            mtexture = stb::load_img(path, r);
+            mtexture = stb::load_img(path, r,nullptr);
             mrenderer = r;
         }
         
         ~Texture()
         {
-			SDL_DestroyTexture(mtexture);
+			//SDL_DestroyTexture(mtexture);
         }
 };
 class Sprite :public Texture
 {
 private:
 
-    SDL_Renderer* mrenderer;
+    float scale_x;
+    float scale_y;
 
 public:
-    SDL_Rect position_in_screen;
-    Sprite(renderer& r, const char* path):Texture(r, path), mrenderer((SDL_Renderer*)r)
+    SDL_FRect position_in_screen;
+    Sprite(renderer& r, const char* path):Texture(r, path,&position_in_screen)
     {
-        position_in_screen = { 0 };
-       
+        position_in_screen.x = 0;
+            position_in_screen.y = 0;
+            scale_x = 0;
+            scale_y = 0;
     }
-    Sprite(): mrenderer(nullptr)
+    Sprite()
     {
-        position_in_screen = { 0 };
+        mrenderer = nullptr;
     }
-    void render(SDL_Rect *position_in_spritesheet,SDL_Rect *position_in_screen)
+    void render(SDL_Rect *position_in_spritesheet)
     {
-        SDL_RenderCopy(mrenderer, mtexture, position_in_spritesheet, position_in_screen);
+		if(position_in_screen.w==0 && position_in_screen.h==0)
+            SDL_RenderCopyF(mrenderer, mtexture, position_in_spritesheet, nullptr);
+        else
+        SDL_RenderCopyF(mrenderer, mtexture, position_in_spritesheet, &position_in_screen);
     }
     void load(renderer& r, const char* path)
     {
         mrenderer = r;
-        mtexture = stb::load_img(path, r);
+        mtexture = stb::load_img(path, r,&position_in_screen);
     }
-
-    
+    void setScale(float x, float y)
+    {
+	    scale_x = x;
+		scale_y = y;
+    }
+	void setPosition(float x,float y)
+		{
+		position_in_screen.x = x;
+		position_in_screen.y = y;
+	}
+    SDL_FRect getGlobalBounds() //return rect after applying scaling
+    {
+		SDL_FRect ret;
+		ret.x = position_in_screen.x ;
+		ret.y = position_in_screen.y ;
+		ret.w = position_in_screen.w * scale_x;
+		ret.h = position_in_screen.h * scale_y;
+		return ret;
+		
+    }
+    void move(float x_offset, float y_offset)
+    {
+		position_in_screen.x += x_offset;
+		position_in_screen.y += y_offset;
+    }
+    SDL_FRect getPosition()
+    {
+		return position_in_screen;
+    }
+	~Sprite()
+	{
+		//SDL_DestroyTexture(mtexture);
+	}
 };

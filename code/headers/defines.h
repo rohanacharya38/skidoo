@@ -17,5 +17,7 @@
                             __debugbreak();\
                                }
 
-constexpr const int SCREEN_WIDTH = 640;
-constexpr const int SCREEN_HEIGHT = 480;
+constexpr const int SCREEN_WIDTH = 1024;
+constexpr const int SCREEN_HEIGHT = 768;
+constexpr const int MAN_HEIGHT = 350;
+constexpr const int MAN_WIDTH = 210;

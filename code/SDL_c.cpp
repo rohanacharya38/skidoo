@@ -37,7 +37,7 @@ SDL_Rect font::_get_char_rect_cood(const char ch)
 
 char * font::load_file(renderer &r, const char *path)
 {
-    mfont = stb::load_img(path, r);
+    mfont = stb::load_img(path, r,nullptr);
     if (mfont == nullptr)
     {
 
@@ -51,11 +51,12 @@ font::font(renderer &r,const char *path)
 {
     load_file(r,path);
 }
-SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
+SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer,SDL_FRect *texture_rect)
 {
     int req_format = STBI_rgb_alpha;
     int width, height, orig_format;
     uint8_t* data = stbi_load(image_path, &width, &height, &orig_format, req_format);
+
     if (!data)
     {
         std::string error = stbi_failure_reason();
@@ -78,9 +79,14 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer)
     depth = 32;
     pitch = 4 * width;
 
-    SDL_Surface *surf = SDL_CreateRGBSurfaceFrom((void *)data, width, height, depth, pitch,
-                                                 rmask, gmask, bmask, amask);
-
+    SDL_Surface *surf = SDL_CreateRGBSurfaceFrom((void *)data, width, height, depth, pitch,rmask, gmask, bmask, amask);
+    if (texture_rect != nullptr)
+    {
+    texture_rect->h = height;
+    texture_rect->w = width;
+    }
+    if (surf == nullptr)
+        return nullptr;
     SDL_Texture *ret = SDL_CreateTextureFromSurface(renderer, surf);
     if (ret == nullptr)
         return nullptr;
