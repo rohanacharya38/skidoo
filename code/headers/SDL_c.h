@@ -2,7 +2,7 @@
 #ifdef __linux__ 
     #include <SDL2/SDL.h>
 #elif _WIN32
-    #include <SDL.h>
+    #include <SDL2\SDL.h>
 #endif
 #include "defines.h"
 
@@ -160,6 +160,7 @@ public:
     {
 	    scale_x = x;
 		scale_y = y;
+		
     }
 	void setPosition(float x,float y)
 		{

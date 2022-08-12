@@ -2,7 +2,7 @@
 #ifndef LINE_H
 #define LINE_H
 #include<cmath>
-#include <SDL.h>
+#include <SDL2\SDL.h>
 #include "SDL_c.h"
 
 //-----CLASS TO MANIPULATE LINES------//
@@ -26,13 +26,16 @@ private:
     Sprite sprite; //sprite to render obstacle
 	Sprite coin; //sprite to render coin    
     SDL_FRect texture_rect; 
-    SDL_FRect coin_texture;
 
 public:
+    bool collected;
+    SDL_FRect coin_texture;
     Line()
     {
         coinX = spriteX = curve = x = y = z = 0;
+        collected = false;
     }
+	
 
     ~Line() {}
 
@@ -53,7 +56,10 @@ public:
         Y = (1 - scale * (y - camY)) * height / 2;
         W = scale * roadW * width / 2;
     }
-
+//camD=camera depth=distance from camera to road=0.84 always constant
+//camZ=z coordinate of point from camera
+//camY=
+	
     //---------TO DRAW OBSTACLES---------//
     void drawSprite(SDL_Renderer * renderer)
     {
@@ -76,7 +82,8 @@ public:
 
         s.position_in_screen = s.getGlobalBounds();
         texture_rect = s.position_in_screen;
-        s.render(nullptr);      //TODO:Check wethher sprite is scaled or not
+        //SDL_RenderDrawRectF(renderer, &texture_rect);
+        s.render(nullptr);      
     }
 
     SDL_FRect getObstacleBounds()
@@ -104,9 +111,13 @@ public:
         s.setPosition(destX, destY);
 
         s.position_in_screen = s.getGlobalBounds();
-		coin_texture = s.position_in_screen;
-
+		coin_texture = s.getGlobalBounds();
+        if (coin_texture.w > 0 && coin_texture.h > 0)
+        {
+        SDL_RenderDrawRectF(renderer, &coin_texture);
+		if(!collected)
         s.render(nullptr);
+        }
     }
 
 

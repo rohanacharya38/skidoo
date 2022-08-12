@@ -4,7 +4,7 @@
     #include <SDL2/SDL.h>
     void __debugbreak();
 #elif _WIN32
-    #include <SDL.h>
+    #include <SDL2\SDL.h>
 #endif
 
 #define ASSERT_SDL(x) if (!(x)) { std::cout << "Assertion failed: " << #x << "ERROR: "<<SDL_GetError()\
@@ -20,4 +20,4 @@
 constexpr const int SCREEN_WIDTH = 1024;
 constexpr const int SCREEN_HEIGHT = 768;
 constexpr const int MAN_HEIGHT = 350;
-constexpr const int MAN_WIDTH = 210;
+constexpr const int MAN_WIDTH = 145;
