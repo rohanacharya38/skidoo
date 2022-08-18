@@ -1,14 +1,10 @@
 
+#include "headers/Line.h"
 #include <vector>
-#include "headers/line.h"
-//this is a CONTAINER to contain all the lines being created//
-
-std::vector<Line> lines;
-
-
 //-------LINE GENERATOR-------------//
-void generateLines()
+void generateLines(std::vector<Line>& lines)
 {
+
     for (int i = 0; i < 2500; i++)
     {
         Line line;
@@ -21,10 +17,12 @@ void generateLines()
             line.curve = -0.7; //for left turn in road
 
         lines.push_back(line); //each line is added to VECTOR CONTAINER
+
     }
 }
 
-void generateObstacles(Sprite ob[])
+//spriteX is X distance multiplier
+void generateObstacles(Sprite ob[], std::vector<Line>& lines)
 {
     for (int i = 0; i < 2500; i++)
     {
@@ -45,14 +43,14 @@ void generateObstacles(Sprite ob[])
             lines[i].spriteX = -4; lines[i].sprite = ob[15];
         } //warning2 sign
 
-        if (i > 0 && i < 451 && i % 15 == 0)
-        {
-            lines[i].spriteX = 4.1; lines[i].sprite = ob[1];
-        } //ashoka tree
+        //if (i > 0 && i < 451 && i % 15 == 0)
+        //{
+        //    lines[i].spriteX = 2; lines[i].sprite = ob[3];
+        //} //tree 1
         if (i > 55 && i < 1000 && i % 19 == 0)
         {
-            lines[i].spriteX = -4; lines[i].sprite = ob[1];
-        } //ashoka tree
+            lines[i].spriteX = -2.9; lines[i].sprite = ob[1];
+        } //tree 1
 
         if (i > 1800 && (i - 99) % 91 == 0)
         {
@@ -63,13 +61,13 @@ void generateObstacles(Sprite ob[])
             lines[i].spriteX = 3; lines[i].sprite = ob[7];
         } //tree
 
-        if (i == 251)
+        if (i == 275)
         {
-            lines[i].spriteX = -4.5; lines[i].sprite = ob[14];
+            lines[i].spriteX = -2.5; lines[i].sprite = ob[16];
         } //curve ahead
-        if (i == 1051)
+        if (i == 1075)
         {
-            lines[i].spriteX = 3.5; lines[i].sprite = ob[14];
+            lines[i].spriteX = 3.5; lines[i].sprite = ob[17];
         } //curve ahead
 
         if (i == 1500)
@@ -78,7 +76,7 @@ void generateObstacles(Sprite ob[])
         } //traffic light
         if (i == 2495)
         {
-            lines[i].spriteX = -0.1; lines[i].sprite = ob[5];
+            lines[i].spriteX = -0.2; lines[i].sprite = ob[5];
         } //traffic light
 
         if (i == 1101 || i == 2200)
@@ -90,14 +88,14 @@ void generateObstacles(Sprite ob[])
             lines[i].spriteX = -1.1; lines[i].sprite = ob[13];
         } //white car
 
-        if (i > 1300 && i < 2200 && i % 101 == 0)
-        {
-            lines[i].spriteX = -2.7; lines[i].sprite = ob[2];
-        } //house
-        if (i > 555 && i < 851 && i % 29 == 0)
+        //if (i > 1300 && i < 2200 && i % 101 == 0)
+        //{
+        //    lines[i].spriteX = -2.7; lines[i].sprite = ob[3];
+        //} //poles
+        if (i > 0 && i < 851 && i % 29 == 0)
         {
             lines[i].spriteX = 0.8; lines[i].sprite = ob[3];
-        } //house
+        } //poles
 //--------------ROAD DIVIEDER-------------------------------------------//
         if (i < 200 && (i % 61) == 0)
         {
@@ -110,7 +108,7 @@ void generateObstacles(Sprite ob[])
 
         if ((i > 700 && i < 1000) && (i % 51) == 0)
         {
-            lines[i].spriteX = 1.9; lines[i].sprite = ob[10];
+            lines[i].spriteX = 3; lines[i].sprite = ob[10];
         }
         if ((i < 700 || i>1000) && (i % 201) == 0)
         {
@@ -151,7 +149,7 @@ void generateObstacles(Sprite ob[])
         //-------------------CAR FRONT---------------------------------------//
         if (i == 551 || i == 1551 || i == 1951)
         {
-            lines[i].spriteX = 0.0; lines[i].sprite = ob[8];
+            lines[i].spriteX = 0.5; lines[i].sprite = ob[8];
         }
         if (i == 301 || i == 701 || i == 1351 || i == 2291)
         {
@@ -179,10 +177,12 @@ void generateObstacles(Sprite ob[])
         {
             lines[i].spriteX = -0.5; lines[i].sprite = ob[12];
         }
+
+
     }
 }
 
-void generateCoins(Sprite& coinn)
+void generateCoins(Sprite& coinn, std::vector<Line>& lines)
 {
     for (int i = 0; i < 2500; i++)
     {
@@ -198,7 +198,8 @@ void generateCoins(Sprite& coinn)
         {
             lines[i].coinX = 2.2; lines[i].coin = coinn;
         }
-        
+
+
     }
 }
 

@@ -4,7 +4,7 @@
 #include<cmath>
 #include <SDL2\SDL.h>
 #include "SDL_c.h"
-
+#include <vector>
 //-----CLASS TO MANIPULATE LINES------//
 
 constexpr const int height = 768;
@@ -17,7 +17,7 @@ constexpr const int segL = 200; //width of each segment of road
 class Line
 {
 private:
-    float x, y, z; //real world coordinate in 3d
+    float x, y, z;
     float X, Y, W; //screen coordinates
     float curve; // for curve in road
     float scale;
@@ -25,8 +25,8 @@ private:
     float coinX;
     Sprite sprite; //sprite to render obstacle
 	Sprite coin; //sprite to render coin    
-    SDL_FRect texture_rect; 
 
+    SDL_FRect texture_rect; 
 public:
     bool collected;
     SDL_FRect coin_texture;
@@ -51,9 +51,24 @@ public:
 
     void projectToScreen(int camX, int camY, int camZ)
     {
+		/* 
+        float Xcamera = x - camX;
+		float Ycamera = y - camY;
+		float Zcamera = z - camZ;
+		
+
+		
+        scale = camD / Zcamera;
+		float Xprojected=Xcamera* scale;
+		float Yprojected=Ycamera* scale;
+		
+        X = (1 + Xprojected) * width / 2;
+		Y = (1 - Yprojected) * height / 2;
+        W = scale * roadW * width / 2;*/
+		/*This shortened to code below*/
         scale = camD / (z - camZ);
         X = (1 + scale * (x - camX)) * width / 2;
-        Y = (1 - scale * (y - camY)) * height / 2;
+        Y = (1 - scale * (y - 1500)) * height / 2;
         W = scale * roadW * width / 2;
     }
 //camD=camera depth=distance from camera to road=0.84 always constant
@@ -67,7 +82,6 @@ public:
 		
         int w = s.position_in_screen.w;
         int h = s.position_in_screen.h;
-
         float destX = X + scale * spriteX * width / 2;
         float destY = Y;
         float destW = w * W / 266;
@@ -79,10 +93,10 @@ public:
         s.position_in_screen={ 0, 0,(float) w, h - (h / destH) };
         s.setScale(destW / w, destH / h);
         s.setPosition(destX, destY);
-
         s.position_in_screen = s.getGlobalBounds();
         texture_rect = s.position_in_screen;
         //SDL_RenderDrawRectF(renderer, &texture_rect);
+		
         s.render(nullptr);      
     }
 
@@ -114,7 +128,7 @@ public:
 		coin_texture = s.getGlobalBounds();
         if (coin_texture.w > 0 && coin_texture.h > 0)
         {
-        SDL_RenderDrawRectF(renderer, &coin_texture);
+        //SDL_RenderDrawRectF(renderer, &coin_texture);
 		if(!collected)
         s.render(nullptr);
         }
@@ -134,9 +148,9 @@ public:
     float getCurve() { return curve; }
     //----------------------------------------//
 
-    friend void generateLines();
-    friend void generateObstacles(Sprite[]);
-    friend void generateCoins(Sprite&);
+    friend void generateLines(std::vector<Line>& lines);
+    friend void generateObstacles(Sprite[]  , std::vector<Line>& lines);
+    friend void generateCoins(Sprite&, std::vector<Line>& lines);
 };
 
 

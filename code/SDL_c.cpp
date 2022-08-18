@@ -97,6 +97,11 @@ SDL_Texture* stb::load_img(const char* image_path, SDL_Renderer* renderer,SDL_FR
     {
         SDL_RenderClear(mrenderer);
     }
+    void renderer::clear(uint8_t r, uint8_t g, uint8_t b,uint8_t a)
+    {
+		SDL_SetRenderDrawColor(mrenderer, r, g, b, a);
+		SDL_RenderClear(mrenderer);
+    }
     void renderer::render()
     {
         SDL_RenderPresent(mrenderer);

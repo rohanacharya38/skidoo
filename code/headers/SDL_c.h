@@ -33,6 +33,7 @@ public:
         mrenderer=nullptr;
     }
     void clear();
+	void clear(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
     void render();
     void set_color(int r=0, int g=0, int b=0, int a=255);
     operator SDL_Renderer* ()
@@ -51,6 +52,7 @@ class font
 {
 private:
     SDL_Texture *mfont;
+
     SDL_Rect _get_char_rect_cood(const char ch);
 public:
     void render_string(SDL_Renderer* renderer,std::string str, int xPos = 0, int yPos = 0)
