@@ -26,8 +26,8 @@ private:
     Sprite sprite; //sprite to render obstacle
 	Sprite coin; //sprite to render coin    
 
-    SDL_FRect texture_rect; 
 public:
+    SDL_FRect texture_rect; 
     bool collected;
     SDL_FRect coin_texture;
     Line()
@@ -38,6 +38,10 @@ public:
 	
 
     ~Line() {}
+    SDL_Texture* get_sprite_texture()
+    {
+        return sprite;
+    }
 
     //////////////////////////////////////////////////////////////////////////////////
     ////      FUNCTION TO PROJECT 3D LINES TO SCREEN BY 2D CONVETSION           /////

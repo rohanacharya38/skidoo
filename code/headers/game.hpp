@@ -68,7 +68,7 @@ public:
             const char * error = SDL_GetError();
             __debugbreak();
         }
-        lines.reserve(sizeof(Line) * 3000);
+        lines.reserve(sizeof(Line) * 5000);
     }
     void start_game()
     {

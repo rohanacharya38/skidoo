@@ -1,6 +1,7 @@
 
 #include "headers/Line.h"
 #include <vector>
+#include <cmath>
 //-------LINE GENERATOR-------------//
 void generateLines(std::vector<Line>& lines)
 {
@@ -43,10 +44,10 @@ void generateObstacles(Sprite ob[], std::vector<Line>& lines)
             lines[i].spriteX = -4; lines[i].sprite = ob[15];
         } //warning2 sign
 
-        //if (i > 0 && i < 451 && i % 15 == 0)
-        //{
-        //    lines[i].spriteX = 2; lines[i].sprite = ob[3];
-        //} //tree 1
+        if (i > 0 && i < 451 && i % 15 == 0)
+        {
+            lines[i].spriteX = 2; lines[i].sprite = ob[3];
+        } //tree 1
         if (i > 55 && i < 1000 && i % 19 == 0)
         {
             lines[i].spriteX = -2.9; lines[i].sprite = ob[1];
@@ -178,7 +179,29 @@ void generateObstacles(Sprite ob[], std::vector<Line>& lines)
             lines[i].spriteX = -0.5; lines[i].sprite = ob[12];
         }
 
+        if (lines[i].sprite.position_in_screen.w < 0)
+        {
+            lines[i].sprite.position_in_screen.w = 0;
+        }
+		if (lines[i].sprite.position_in_screen.w > width)
+		{
+			lines[i].sprite.position_in_screen.w = 0;
+		}
+        if (lines[i].sprite.position_in_screen.h < 0)
+        {
+            lines[i].sprite.position_in_screen.h = 0;
 
+        }
+		
+		if (lines[i].sprite.position_in_screen.h > height)
+		{
+			lines[i].sprite.position_in_screen.h = 0;
+		}
+		//if width or height are NaN width and height =0
+        if (isnan(lines[i].sprite.position_in_screen.w)||isnan(lines[i].sprite.position_in_screen.h))
+        {
+            lines[i].sprite.position_in_screen.w = lines[i].sprite.position_in_screen.h = 0;
+        }
     }
 }
 

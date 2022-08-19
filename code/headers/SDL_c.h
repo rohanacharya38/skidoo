@@ -129,7 +129,7 @@ private:
 
 public:
     SDL_FRect position_in_screen;
-    Sprite(renderer& r, const char* path):Texture(r, path,&position_in_screen)
+    Sprite(renderer& r, const char* path):Texture(r, path,nullptr)
     {
         position_in_screen.x = 0;
             position_in_screen.y = 0;

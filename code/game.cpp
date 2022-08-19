@@ -15,6 +15,28 @@ return SDL_HasIntersection(&P, &Q);
 }
 #endif
 
+bool gameCallSDL_HasIntersectionF(const SDL_FRect* A, const SDL_FRect* B)
+{
+        if (isnan(A->w)||isnan(A->h)||isnan(B->w)||isnan(B->h))
+        {
+            //printf("nan");
+			return false;   
+        }
+  //  if (SDL_HasIntersectionF(A, B) )
+  //  {
+  //      //print all values in A and B
+		//printf("A->x: %f\n", A->x);
+		//printf("A->y: %f\n", A->y);
+		//printf("A->w: %f\n", A->w);
+		//printf("A->h: %f\n", A->h);
+		//printf("B->x: %f\n", B->x);
+		//printf("B->y: %f\n", B->y);
+		//printf("B->w: %f\n", B->w);
+  //  }
+    return SDL_HasIntersectionF(A, B);
+	
+}
+
 /*...................*/
 //this is a global variable in line.cpp file that is used in this code;
 /*...................*/
@@ -42,7 +64,7 @@ void Game::game()
     cur_game.man.position_in_screen = { SCREEN_WIDTH / 2 - 75, SCREEN_HEIGHT / 2 - 50,145,350 };
 
     /*.........................*/
-    int N_lines = lines.size();
+    int N_lines = 2500;
     for (int i = 0; i < 2500; i++)
     {
         lines[i % N_lines].collected = false;
@@ -80,7 +102,6 @@ void Game::game()
         //bgTexture.position_in_screen = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
         /*rendering background texture(sky)*/
         bgTexture.render(nullptr);
-
         while (SDL_PollEvent(&event))
         {
             switch (event.type)
@@ -208,8 +229,9 @@ void Game::game()
             coin_collected += 1;
             lines[startPos + 11].collected = true;
         }
-        if (SDL_HasIntersectionF((lines[startPos + 11].getObstacleBoundsPtr()), &(cur_game.man.position_in_screen)))
+        if (gameCallSDL_HasIntersectionF((&lines[startPos + 11].texture_rect), &(cur_game.man.position_in_screen)))
         {
+            printf("!alive,%d",startPos);
              isAlive = false;
         }
 
@@ -242,6 +264,7 @@ void Game::game()
         {
             menu_running = true;
             game_running = false;
+
         }
 }
 bgTexture.position_in_screen = { 0,0,SCREEN_HEIGHT,SCREEN_WIDTH };
