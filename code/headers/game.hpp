@@ -12,7 +12,11 @@ private:
      bool running ;
      bool menu_running;
 	bool game_running;
+    bool high_scores_display;
     float load_percent;
+    float score = 0;
+    float coin_collected = 0;
+    float high_scores_numbers[6];
     Sprite bgTexture;
     SDL_Event event;
     Mix_Music* bg_music;
@@ -25,6 +29,9 @@ private:
         Sprite Coin;
         SDL_Rect man_sprite_position[28];
     }cur_game;
+    char score_display[100];
+    char coin_display[100];
+
 
 
 public:
@@ -34,7 +41,7 @@ public:
         running = true;
 		menu_running=true;
 		game_running=false;
-
+        high_scores_display = false;
         load_percent = 0;
         char *log = mfont.load_file(mrenderer, "./misc/font.png");
         if (log != nullptr)
@@ -69,6 +76,10 @@ public:
             __debugbreak();
         }
         lines.reserve(sizeof(Line) * 5000);
+        for (int i = 0; i < 5; i++)
+        {
+            high_scores_numbers[i] = 0;
+        }
     }
     void start_game()
     {
@@ -76,10 +87,12 @@ public:
         
         Mix_PlayMusic(loading, -1);
         load_screen();
-        while (game_running || menu_running)
+        while (game_running || menu_running||high_scores_display)
         {
             if (menu_running)
                 menu();
+            if (high_scores_display)
+                high_scores();
             Mix_HaltMusic();
             if (game_running)
                 game();
@@ -89,9 +102,10 @@ public:
     }
     void menu();
     void game();
-
+    void after_death();
     void load_screen();
     void load_game_assets();
-
+    void high_scores();
+    void read_high_scores_and_sort();
 
 };

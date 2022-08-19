@@ -5,6 +5,7 @@
 #include "headers/Line.h"
 #include "headers/defines.h"
 #include <vector>
+#include <fstream>
 
 #if !(SDL_MAJOR_VERSION==2 && SDL_MINOR_VERSION==0 && SDL_PATCHLEVEL==22)
 bool SDL_HasIntersectionF(const SDL_FRect *A ,const SDL_FRect *B)
@@ -14,12 +15,14 @@ SDL_Rect Q = { (int)(B->x),(int)(B->y),(int)(B->w),(int)(B->h) };
 return SDL_HasIntersection(&P, &Q);
 }
 #endif
-
-bool gameCallSDL_HasIntersectionF(const SDL_FRect* A, const SDL_FRect* B)
+void sort(float* arr, int size);
+bool gameCallSDL_HasIntersectionF(SDL_FRect* A, SDL_FRect* B)
 {
         if (isnan(A->w)||isnan(A->h)||isnan(B->w)||isnan(B->h))
         {
             //printf("nan");
+            A->w = 0;
+			A->h = 0;
 			return false;   
         }
   //  if (SDL_HasIntersectionF(A, B) )
@@ -71,8 +74,7 @@ void Game::game()
     }
     int zpos = 0;
     int xpos = 0;
-    float score = 0;
-    float coin_collected = 0;
+
     bool isAlive = true;
     int speed = 200;
     float CollideTime = 0;
@@ -92,9 +94,7 @@ void Game::game()
     /***************************/
 
     int frame_increment = 1;
-    char score_display[100];
-    char coin_display[100];
-
+    
     while (game_running)
     {
 
@@ -109,6 +109,7 @@ void Game::game()
             case SDL_QUIT:
                 game_running = false;
                 menu_running = false;
+                return;
                 break;
 
 
@@ -117,7 +118,7 @@ void Game::game()
                 {
                 case SDLK_ESCAPE:
                     game_running = false;
-                    menu_running = true;
+                    menu_running = false;
                     break;
                 case SDLK_SPACE:
                 case SDLK_UP:
@@ -223,7 +224,7 @@ void Game::game()
 
         //------COIN TOUCH TEST----//
 
-        if (SDL_HasIntersectionF(&(lines[startPos + 11].coin_texture), &cur_game.man.position_in_screen) && (lines[startPos + 11].collected == false))
+        if (gameCallSDL_HasIntersectionF(&(lines[startPos + 11].coin_texture), &cur_game.man.position_in_screen) && (lines[startPos + 11].collected == false))
         {
             Mix_PlayChannel(-1, coin_collected_sound, 0);
             coin_collected += 1;
@@ -231,7 +232,6 @@ void Game::game()
         }
         if (gameCallSDL_HasIntersectionF((&lines[startPos + 11].texture_rect), &(cur_game.man.position_in_screen)))
         {
-            printf("!alive,%d",startPos);
              isAlive = false;
         }
 
@@ -262,12 +262,13 @@ void Game::game()
         mrenderer.render();
         if (!isAlive)
         {
-            menu_running = true;
+            menu_running = false;
             game_running = false;
-
         }
+
 }
 bgTexture.position_in_screen = { 0,0,SCREEN_HEIGHT,SCREEN_WIDTH };
+after_death();
 Mix_HaltMusic();
 }
 void Game::menu()
@@ -279,6 +280,8 @@ void Game::menu()
             mrenderer.clear(0, 0, 0, 255);
             bgTexture.render(nullptr);
             mfont.render_string(mrenderer, "START", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
+			//render high scores below start
+			mfont.render_string(mrenderer, "HIGH SCORES", SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2 + 50);
             while (SDL_PollEvent(&event))
             {
                 switch (event.type)
@@ -291,12 +294,19 @@ void Game::menu()
                 {
                     if (event.button.button == SDL_BUTTON_LEFT)
                     {
-                        if (event.button.x > SCREEN_WIDTH / 2 - 50 && event.button.x < SCREEN_WIDTH / 2 + 50 && event.button.y > SCREEN_HEIGHT / 2 - 50 && event.button.y < SCREEN_HEIGHT / 2 + 50)
+                        if (event.button.x > SCREEN_WIDTH / 2 - 50 && event.button.x < SCREEN_WIDTH / 2 + 100&&event.button.y > SCREEN_HEIGHT / 2 - 50 && event.button.y < SCREEN_HEIGHT / 2 + 50)
                         {
                             game_running = true;
                             menu_running = false;
                         }
+						if (event.button.x > SCREEN_WIDTH / 2 - 50 && event.button.x < SCREEN_WIDTH / 2 + 100&&event.button.y> SCREEN_HEIGHT / 2 + 50 && event.button.y < SCREEN_HEIGHT / 2 + 100)
+						{
+							game_running = false;
+							menu_running = false;
+                            high_scores_display = true;
+						}
                     }
+					
                     break;
                 }
                 case SDL_KEYDOWN: {
@@ -401,3 +411,135 @@ EXIT:
     return;
 }
 
+void Game::after_death()
+{
+    bgTexture.position_in_screen = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
+    read_high_scores_and_sort();
+    high_scores_numbers[5] = score;
+    sort(high_scores_numbers, 6);
+	//write high scores to file
+    std::fstream file("./bin/high_scores.bin",std::ios::binary|std::ios::out);
+    if (!file.is_open())
+    {
+        std::cout << "Couldn't open file" << std::endl;
+        return;
+    }
+    file.write(reinterpret_cast<char*>(&high_scores_numbers), sizeof(float) * 5);
+    file.close();
+	//while loop to wait for user to press space to restart
+    while (!(game_running||menu_running))
+    {
+        mrenderer.clear(0,0,0,255);
+
+        while (SDL_PollEvent(&event))
+        {
+            switch (event.type)
+            {
+            case SDL_QUIT:
+                game_running = false;
+                menu_running = false;
+                break;
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_SPACE)
+                {
+					game_running = true;
+					menu_running = false;
+					break;
+                }
+                else
+				{
+					game_running = false;
+					menu_running = true;
+					break;
+				}
+                break;
+            }
+        }
+        bgTexture.render(nullptr);
+        sprintf_s(score_display, "Score: %d", (int)score);
+        sprintf_s(coin_display, "Coins:%d", (int)coin_collected);
+		
+        mfont.render_string(mrenderer, score_display, SCREEN_WIDTH/2, SCREEN_HEIGHT/2-50);
+        mfont.render_string(mrenderer, coin_display, SCREEN_WIDTH/2, SCREEN_HEIGHT);
+		mfont.render_string(mrenderer, "Press space to restart or any key to main menu", 10, SCREEN_HEIGHT - 20);
+        mrenderer.render();
+    }
+    score = 0;
+	coin_collected = 0;
+}
+void Game::high_scores()
+{
+    read_high_scores_and_sort();
+
+	
+	// write high_scores to file
+	//while loop to wait for user to press space to restart
+	while (high_scores_display)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			switch (event.type)
+			{
+			case SDL_QUIT:
+				game_running = false;
+				menu_running = false;
+                high_scores_display = false;
+				break;
+			case SDL_KEYDOWN:
+                if (event.key.keysym.sym)
+                {
+					high_scores_display = false;
+                    game_running = false;
+                    menu_running = true;
+					break;
+                }
+				break;
+			}
+		}
+		mrenderer.clear();
+		bgTexture.render(nullptr);
+        mfont.render_string(mrenderer, "High Scores", SCREEN_WIDTH / 2, 20);
+		for (int i = 0; i < 5; i++)
+		{
+			sprintf_s(score_display, "%d. %d",i+1,(int) high_scores_numbers[i]);
+			mfont.render_string(mrenderer, score_display, SCREEN_WIDTH / 2, 50 + i * 30);
+		}
+		mfont.render_string(mrenderer, "Press any key to main menu", 10, SCREEN_HEIGHT - 20);
+		mrenderer.render();
+	}
+	score = 0;
+	coin_collected = 0;
+}
+void sort(float* arr,int size)
+{
+    float temp = 0;
+	for (int i = 0; i < size; i++)
+	{
+		for (int j = i; j < size; j++)
+		{
+			if (arr[i] < arr[j])
+			{
+				temp = arr[i];
+				arr[i] = arr[j];
+				arr[j] = temp;
+			}
+		}
+	}
+	
+}
+void Game::read_high_scores_and_sort()
+{
+    std::fstream file("./bin/high_scores.bin", std::ios::in | std::ios::binary);
+    if (!file.is_open())
+    {
+        file.close();
+        file.open("./bin/high_scores.bin", std::ios::out | std::ios::in | std::ios::binary);
+        if (!file.is_open())
+        {
+            std::cout << "File couldn't be opened" << std::endl;
+        }
+        file.write(reinterpret_cast<char*>(&high_scores_numbers), sizeof(float) * 5);
+    }
+    file.read(reinterpret_cast<char*>(&high_scores_numbers), sizeof(float)*5);
+    sort(high_scores_numbers, 5);
+}
