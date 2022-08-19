@@ -1,8 +1,8 @@
 #include <SDL2/SDL.h>
 #include "SDL_c.h"
-#include "headers/quads.h"
+#include "quads.h"
 #include <SDL2/SDL_mixer.h>
-#include "headers/Line.h"
+#include "Line.h"
 #include <vector>
 class Game
 {
@@ -42,7 +42,15 @@ public:
             __debugbreak();
         }
         coin_collected_sound = Mix_LoadWAV("./misc/coin_collected.wav");
+        if (!coin_collected_sound)
+        {
+            std::cout << "Error loading coin sound" << std::endl;
+        }
 		bg_music=Mix_LoadMUS("./misc/bg.wav");
+        if (!bg_music)
+        {
+            std::cout << "Error loading background music" << std::endl;
+        }
         if (!bg_music)
         {
             std::cout << "BG music not found" << std::endl;
@@ -60,6 +68,7 @@ public:
             const char * error = SDL_GetError();
             __debugbreak();
         }
+        lines.reserve(sizeof(Line) * 3000);
     }
     void start_game()
     {

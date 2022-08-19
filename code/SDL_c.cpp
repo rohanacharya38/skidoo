@@ -1,7 +1,7 @@
 #ifdef __linux__ 
     #include <SDL2/SDL.h>
 #elif _WIN32
-    #include <SDL2\SDL.h>
+    #include <SDL2/SDL.h>
 #endif
 #include "headers/SDL_c.h"
 #include "headers/defines.h"
@@ -46,6 +46,7 @@ char * font::load_file(renderer &r, const char *path)
     {
         return nullptr;
     }
+    return nullptr;
 }
 font::font(renderer &r,const char *path)
 {

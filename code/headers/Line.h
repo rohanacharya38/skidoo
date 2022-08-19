@@ -2,7 +2,7 @@
 #ifndef LINE_H
 #define LINE_H
 #include<cmath>
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 #include "SDL_c.h"
 #include <vector>
 //-----CLASS TO MANIPULATE LINES------//
@@ -103,6 +103,10 @@ public:
     SDL_FRect getObstacleBounds()
     {
         return texture_rect;
+    }
+    SDL_FRect *getObstacleBoundsPtr()
+    {
+        return &texture_rect;
     }
 
     //---------TO DRAW COINS--------------//

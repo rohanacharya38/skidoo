@@ -1,17 +1,28 @@
-#include <SDL2\SDL.h>
+#include <SDL2/SDL.h>
 #include "headers/game.hpp"
-#include "headers/threading.h"
 #include <thread>
 #include "headers/quads.h"
 #include "headers/Line.h"
+#include "headers/defines.h"
 #include <vector>
+
+#if !(SDL_MAJOR_VERSION==2 && SDL_MINOR_VERSION==0 && SDL_PATCHLEVEL==22)
+bool SDL_HasIntersectionF(const SDL_FRect *A ,const SDL_FRect *B)
+{
+SDL_Rect P = { (int)(A->x),(int)(A->y),(int)(A->w),(int)(A->h) };
+SDL_Rect Q = { (int)(B->x),(int)(B->y),(int)(B->w),(int)(B->h) };
+return SDL_HasIntersection(&P, &Q);
+}
+#endif
+
 /*...................*/
 //this is a global variable in line.cpp file that is used in this code;
 /*...................*/
-bool assets_loaded = false;
+
 #define NO_OF_OBSTACLES 16
 void Game::game()
 {
+
     float anim_frame = 0;
     Mix_PlayMusic(bg_music, -1);
     Mix_VolumeMusic(20);
@@ -40,7 +51,7 @@ void Game::game()
     int xpos = 0;
     float score = 0;
     float coin_collected = 0;
-    int isAlive = true;
+    bool isAlive = true;
     int speed = 200;
     float CollideTime = 0;
     //----------------------gravity----------------------------------//
@@ -197,7 +208,7 @@ void Game::game()
             coin_collected += 1;
             lines[startPos + 11].collected = true;
         }
-        if (SDL_HasIntersectionF(&(lines[startPos + 11].getObstacleBounds()), &(cur_game.man.position_in_screen)))
+        if (SDL_HasIntersectionF((lines[startPos + 11].getObstacleBoundsPtr()), &(cur_game.man.position_in_screen)))
         {
              isAlive = false;
         }
