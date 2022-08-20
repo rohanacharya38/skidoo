@@ -3,7 +3,7 @@
 #define LINE_H
 #include<cmath>
 #include <SDL2/SDL.h>
-#include "SDL_c.h"
+#include "SDL_classes.h"
 #include <vector>
 //-----CLASS TO MANIPULATE LINES------//
 
@@ -43,15 +43,6 @@ public:
         return sprite;
     }
 
-    //////////////////////////////////////////////////////////////////////////////////
-    ////      FUNCTION TO PROJECT 3D LINES TO SCREEN BY 2D CONVETSION           /////
-    //// Here the CAMERAS indicate FROM WHAT POSITION THE POINT IS BEING VIEWED/////
-    /////                                                                    //////
-    ////-------------CONVERSION BASED ON SIMILAR TRIANGLES--------------------////
-    /*      #First the point is TRANSLATED to CAMERA COORDINATE                */
-    /*      #Then PROJECTED                                                   */
-    /*      #Finally SCALED DOWN to SCREEN COORDINATE                        */
-    //////////////////////////////////////////////////////////////////////////
 
     void projectToScreen(int camX, int camY, int camZ)
     {

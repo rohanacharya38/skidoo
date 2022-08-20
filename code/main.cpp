@@ -1,8 +1,8 @@
 
-    #include <SDL2/SDL.h>
-
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 #include "headers/defines.h"
-#include "headers/SDL_c.h"
+#include "headers/SDL_classes.h"
 #include "headers/game.hpp"
 
 int main(int argc, char **argv)

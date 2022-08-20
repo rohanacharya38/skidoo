@@ -4,7 +4,7 @@ if(!(Test-Path("../bin")))
         New-Item -Itemtype Directory "../bin"
 }
 
-$source_name = "../code/main.cpp","../code/SDL_c.cpp","../code/game.cpp","../code/line.cpp"
+$source_name = "../code/main.cpp","../code/SDL_classes.cpp","../code/game.cpp","../code/line.cpp"
 $executable_name = "skidoo.exe"
 $executable_name_linux = "skidoo.o"
 if(Test-Path("C:/vcpkg/vcpkg"))

@@ -1,5 +1,5 @@
 #include <SDL2/SDL.h>
-#include "SDL_c.h"
+#include "SDL_classes.h"
 #include "quads.h"
 #include <SDL2/SDL_mixer.h>
 #include "Line.h"
@@ -84,7 +84,6 @@ public:
     void start_game()
     {
         Mix_Music* loading = Mix_LoadMUS("./misc/start.wav");
-        
         Mix_PlayMusic(loading, -1);
         load_screen();
         while (game_running || menu_running||high_scores_display)

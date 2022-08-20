@@ -25,19 +25,7 @@ bool gameCallSDL_HasIntersectionF(SDL_FRect* A, SDL_FRect* B)
 			A->h = 0;
 			return false;   
         }
-  //  if (SDL_HasIntersectionF(A, B) )
-  //  {
-  //      //print all values in A and B
-		//printf("A->x: %f\n", A->x);
-		//printf("A->y: %f\n", A->y);
-		//printf("A->w: %f\n", A->w);
-		//printf("A->h: %f\n", A->h);
-		//printf("B->x: %f\n", B->x);
-		//printf("B->y: %f\n", B->y);
-		//printf("B->w: %f\n", B->w);
-  //  }
     return SDL_HasIntersectionF(A, B);
-	
 }
 
 /*...................*/
@@ -236,8 +224,8 @@ void Game::game()
         }
 
         //cur_game.man.render(&cur_game.man_sprite_position);
-        sprintf_s(score_display, "Score: %d", (int)score);
-        sprintf_s(coin_display, "Coins:%d", (int)coin_collected);
+        sprintf(score_display, "Score: %d", (int)score);
+        sprintf(coin_display, "Coins:%d", (int)coin_collected);
         mfont.render_string(mrenderer, score_display, 10, 10);
         mfont.render_string(mrenderer, coin_display, 10, 30);
         if (isJumping)
@@ -342,7 +330,7 @@ void Game::load_game_assets()
     {
         cur_game.man_sprite_position[i].h = MAN_HEIGHT;
         cur_game.man_sprite_position[i].w = MAN_WIDTH;
-        cur_game.man_sprite_position[i].x = 150*i+GAP_BETWEEN_2_SPRITE;
+        cur_game.man_sprite_position[i].x = 150*i+50;
         cur_game.man_sprite_position[i].y =cur_game.man_sprite_position[i-1].y ;
     }
         cur_game.man.load(mrenderer, "./misc/man.png");
@@ -357,7 +345,7 @@ void Game::load_game_assets()
     char data[100];
     for (int i = 1; i <NO_OF_OBSTACLES ; i++)
     {
-        sprintf_s(data, "./misc/%d.png", i);
+        sprintf(data, "./misc/%d.png", i);
 		cur_game.obstacles[i].load(mrenderer, (data));
         
 
@@ -456,8 +444,8 @@ void Game::after_death()
             }
         }
         bgTexture.render(nullptr);
-        sprintf_s(score_display, "Score: %d", (int)score);
-        sprintf_s(coin_display, "Coins:%d", (int)coin_collected);
+        sprintf(score_display, "Score: %d", (int)score);
+        sprintf(coin_display, "Coins:%d", (int)coin_collected);
 		
         mfont.render_string(mrenderer, score_display, SCREEN_WIDTH/2, SCREEN_HEIGHT/2-50);
         mfont.render_string(mrenderer, coin_display, SCREEN_WIDTH/2, SCREEN_HEIGHT);
@@ -501,7 +489,7 @@ void Game::high_scores()
         mfont.render_string(mrenderer, "High Scores", SCREEN_WIDTH / 2, 20);
 		for (int i = 0; i < 5; i++)
 		{
-			sprintf_s(score_display, "%d. %d",i+1,(int) high_scores_numbers[i]);
+			sprintf(score_display, "%d. %d",i+1,(int) high_scores_numbers[i]);
 			mfont.render_string(mrenderer, score_display, SCREEN_WIDTH / 2, 50 + i * 30);
 		}
 		mfont.render_string(mrenderer, "Press any key to main menu", 10, SCREEN_HEIGHT - 20);

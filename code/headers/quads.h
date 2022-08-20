@@ -1,6 +1,6 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "SDL_c.h"
+#include "SDL_classes.h"
 class Quad
 {
 private:
