@@ -46,7 +46,7 @@ public:
         char *log = mfont.load_file(mrenderer, "./misc/font.png");
         if (log != nullptr)
         {
-            __debugbreak();
+            std::cout<<"Error loading font file"<<std::endl;
         }
         coin_collected_sound = Mix_LoadWAV("./misc/coin_collected.wav");
         if (!coin_collected_sound)
@@ -63,17 +63,17 @@ public:
             std::cout << "BG music not found" << std::endl;
             const char* err = Mix_GetError();
 
-            __debugbreak();
+            
         }
         if (coin_collected_sound == NULL)
         {
-            __debugbreak();
+            
         }
         bgTexture.load(mrenderer, "./misc/bg_scaled.png");
         if (((SDL_Texture*)bgTexture) == NULL)
         {
             const char * error = SDL_GetError();
-            __debugbreak();
+            
         }
         lines.reserve(sizeof(Line) * 5000);
         for (int i = 0; i < 5; i++)
@@ -85,7 +85,10 @@ public:
     {
         Mix_Music* loading = Mix_LoadMUS("./misc/start.wav");
         Mix_PlayMusic(loading, -1);
+
+
         load_screen();
+
         while (game_running || menu_running||high_scores_display)
         {
             if (menu_running)

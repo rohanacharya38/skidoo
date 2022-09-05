@@ -35,7 +35,6 @@ bool gameCallSDL_HasIntersectionF(SDL_FRect* A, SDL_FRect* B)
 #define NO_OF_OBSTACLES 16
 void Game::game()
 {
-
     float anim_frame = 0;
     Mix_PlayMusic(bg_music, -1);
     Mix_VolumeMusic(20);
@@ -222,7 +221,6 @@ void Game::game()
         {
              isAlive = false;
         }
-
         //cur_game.man.render(&cur_game.man_sprite_position);
         sprintf(score_display, "Score: %d", (int)score);
         sprintf(coin_display, "Coins:%d", (int)coin_collected);
@@ -261,7 +259,6 @@ Mix_HaltMusic();
 }
 void Game::menu()
 {
-    
         bgTexture.position_in_screen = { 0,0,SCREEN_WIDTH,SCREEN_HEIGHT };
         while (menu_running)
         {
@@ -363,7 +360,6 @@ void Game::load_game_assets()
 }
 void Game::load_screen()
 {
-
     std::thread t1(&Game::load_game_assets, this);
     load_game_assets();
     SDL_FRect load_outline = { 20,500,700,50 };
@@ -394,8 +390,7 @@ void Game::load_screen()
     }
 	
 EXIT:
-	t1.join();
-
+t1.join();
     return;
 }
 

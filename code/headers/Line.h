@@ -17,7 +17,7 @@ constexpr const int segL = 200; //width of each segment of road
 class Line
 {
 private:
-    float x, y, z;
+    float x, y, z;//world coordinates
     float X, Y, W; //screen coordinates
     float curve; // for curve in road
     float scale;
@@ -78,6 +78,7 @@ public:
         int w = s.position_in_screen.w;
         int h = s.position_in_screen.h;
         float destX = X + scale * spriteX * width / 2;
+
         float destY = Y;
         float destW = w * W / 266;
         float destH = h * W / 266;

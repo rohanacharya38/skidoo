@@ -11,7 +11,6 @@ if(Test-Path("C:/vcpkg/vcpkg"))
 {
 $lib_path ="C:/vcpkg/vcpkg/installed/x64-windows/lib/"
 $include_path ="C:/vcpkg/vcpkg/installed/x64-windows/include/"
-	
 }
 else
 {
@@ -20,7 +19,7 @@ else
 }
 
 $compiler_flags = "/nologo","/EHsc","/Zi" ,"/FC"
-$gcc_flags="-g"
+$gcc_flags=""
 $msvc_flags="/EHsc"
 $windows_libraries = "SDL2main.lib","SDL2.lib","SDL2_mixer.lib", "user32.lib", "shell32.lib", "gdi32.lib"
 $linux_linker_flags= "-lSDL2", "-lSDL2_mixer"
@@ -38,6 +37,7 @@ g++ $source_name -o $executable_name_linux $linux_linker_flags  $gcc_flags
 cd ..
 ./bin/skidoo.o
 }
+cls
 if(Get-Command cl)
 {
 #	
