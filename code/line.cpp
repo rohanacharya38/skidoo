@@ -93,10 +93,10 @@ void generateObstacles(Sprite ob[], std::vector<Line>& lines)
         //{
         //    lines[i].spriteX = -2.7; lines[i].sprite = ob[3];
         //} //poles
-        if (i > 0 && i < 851 && i % 29 == 0)
-        {
-            lines[i].spriteX = 0.8; lines[i].sprite = ob[3];
-        } //poles
+        // if (i > 0 && i < 851 && i % 29 == 0)
+        // {
+        //     lines[i].spriteX = 0.8; lines[i].sprite = ob[3];
+        // } //poles
 //--------------ROAD DIVIEDER-------------------------------------------//
         if (i < 200 && (i % 61) == 0)
         {
